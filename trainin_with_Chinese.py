@@ -5,12 +5,15 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 from fast_read_data import ChineseWrittenChars
 
+'''
 chars = ChineseWrittenChars()
 chars.test.use_rotation = False
 chars.test.use_filter = False
 
 lb = LabelBinarizer()
 lb.fit(chars.generate_char_list())
+'''
+
 number_of_classes = 3755
 
 def build_model():
@@ -79,6 +82,9 @@ def app(train_or_test):
         y_test = lb.transform(y_test)
         X_test /= 255
         testing(X_test, y_test)
+        
+if '__name__' == '__main__' :
+    app('train')
 
 
 

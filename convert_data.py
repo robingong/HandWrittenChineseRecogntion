@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
 import os
 import numpy as np
 import struct
 from PIL import Image
 import pickle
 
-data_dir = ''
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+data_dir = '/mnt/E/x/HandWrittenChineseRecogntion'
 train_data_dir = os.path.join(data_dir, 'HWDB1.1trn_gnt')
 test_data_dir = os.path.join(data_dir, 'HWDB1.1tst_gnt')
 
@@ -34,11 +39,14 @@ def read_from_gnt_dir(gnt_dir=train_data_dir):
                 for image, tagcode in one_file(f):
                     yield image, tagcode
 
+print(train_data_dir)
 
 char_set = set()
 for _, tagcode in read_from_gnt_dir(gnt_dir=train_data_dir):
+    print(tagcode)
     tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
     char_set.add(tagcode_unicode)
+print(char_set)
 
 #save char list
 char_list = list(char_set)
@@ -50,6 +58,7 @@ f.close()
 train_counter = 0
 test_counter = 0
 
+print(char_dict)
 print 'start extracting training data'
 for image, tagcode in read_from_gnt_dir(gnt_dir=train_data_dir):
     tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
@@ -64,6 +73,7 @@ print 'start extracting testing data'
 for image, tagcode in read_from_gnt_dir(gnt_dir=test_data_dir):
     tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
     im = Image.fromarray(image)
+    print(tagcode_unicode)
     dir_name = './data/test/' + '%0.5d'%char_dict[tagcode_unicode]
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
